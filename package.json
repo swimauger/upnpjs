@@ -1,0 +1,25 @@
+{
+  "name": "upnpjs",
+  "version": "1.0.0",
+  "description": "A Node.js package for using UPnP",
+  "main": "./index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swimauger/upnpjs.git"
+  },
+  "keywords": [
+    "UPnP",
+    "Universal Plug and Play"
+  ],
+  "author": "Mark Auger",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/swimauger/upnpjs/issues"
+  },
+  "homepage": "https://github.com/swimauger/upnpjs#readme",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "chalk": "^3.0.0",
+    "cheerio": "^1.0.0-rc.3"
+  }
+}
