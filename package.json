@@ -1,6 +1,6 @@
 {
   "name": "upnpjs",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A Node.js package for using UPnP",
   "main": "./index.js",
   "bin": {
@@ -28,6 +28,6 @@
     "yargs": "^15.1.0"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://npm.pkg.github.com/@swimauger"
   }
 }
