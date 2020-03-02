@@ -4,7 +4,7 @@
 ![](https://img.shields.io/npm/v/upnpjs?style=for-the-badge)
 ![](https://img.shields.io/github/license/swimauger/upnpjs?style=for-the-badge)
 
- Node.js package built for managing network protocols on a router using UPnP.
+ Node.js package built for managing a router using UPnP.
 
 ## Installation
 **Install upnp binary**
