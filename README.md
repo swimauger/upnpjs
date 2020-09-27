@@ -1,82 +1,105 @@
 # UPnP Node.js Package
 
-![](https://img.shields.io/npm/dw/upnpjs?style=for-the-badge)
-![](https://img.shields.io/npm/v/upnpjs?style=for-the-badge)
-![](https://img.shields.io/github/license/swimauger/upnpjs?style=for-the-badge)
+![](https://img.shields.io/npm/dw/upnpjs?color=204051&style=for-the-badge)
+![](https://img.shields.io/github/license/swimauger/upnpjs?color=3B6978&style=for-the-badge)
+![](https://img.shields.io/npm/v/upnpjs?color=84A9AC&style=for-the-badge)
+![](https://img.shields.io/github/repo-size/swimauger/upnpjs?color=E7DFD5&label=Size&style=for-the-badge)
 
  Node.js package built for managing a router using UPnP.
 
 ## Installation
-**Install upnp binary**
+**Install upnpjs Library**
+```bash
+    npm install upnpjs
+```
+
+**Install upnp CLI**
 ```bash
     npm install upnpjs -g
+    #################################
+    # Use `upnp -h` to show help menu
 ```
 
-**Install upnpjs package**
-```bash
-    npm install upnpjs --save
-```
+#
 
-## Usage
-
-#### Library
-
-**Getting Started:**
+## Getting Started
+*Discover the Internet Gateway Device*
 ```JavaScript
     const upnp = require('upnpjs');
 
-    upnp.getDevice().then(function(device) {
-        /*
-            Device is an object representation of your
-            Internet Gateway Device in JavaScript.
+    const igd = await upnp.discover();
+```
+<br>
+And that's all there is to it. Follow the documentation bellow to see what can be done with the newly discovered Internet Gateway Device.
 
-            Follow Device Documentation bellow
-        */
-    });
+#
+
+## InternetGatewayDevice
+*InternetGatewayDevice allows access to different services potentially allowed by the device*
+
+<br>
+
+### **addPortMapping**
+*Service action for mapping ports on the router*
+```JavaScript
+await igd.addPortMapping({
+    ip: 192.168.0.4,
+    internalPort: 54321,
+    externalPort: 54321,
+    protocol: 'TCP',
+    description: 'Example port map from 54321 -> 54321'
+});
 ```
 
-[**Device Documentation**](./docs/device.md)
+<br>
 
-***
-
-**Binary**
-```bash
-    # Help
-    upnp
-
-    # Create Port Mapping with TCP protocol
-    upnp -a 192.168.0.2 3000 80
-
-    # Delete Port Mapping
-    upnp -d 80 TCP
-
-    # Retrieve list of Port Maps
-    upnp -l
-
-    # Get Local or External IP Address
-    upnp -g local
-    upnp --get external
+### **deletePortMapping**
+*Service action for removing port mappings on the router*
+```JavaScript
+await igd.deletePortMapping({
+    externalPort: 12345,
+    protocol: 'UDP'
+});
 ```
 
-## What is UPnP?
+<br>
 
-Rather than regurgitate something you can simply Google, this is more about what this library was built for using UPnP. If you are interested in what UPnP actually is, this [article](https://www.varonis.com/blog/what-is-upnp/) explains it very well. This library is currently built to manipulate port mappings on you're router and retrieve simple information like your networks external ip address or your computers local address. There are many more things you can do with UPnP; however, this library only supports certain functionality at the moment. If you are interested in some of UPnP's functionality you can take a look at the [Service Template](http://upnp.org/specs/gw/UPnP-gw-WANIPConnection-v2-Service.pdf) listed as one of the references.
+### **getExternalIPAddress**
+*Service action for retrieving external ip address*
+```JavaScript
+const ip = await igd.getExternalIPAddress();
+```
 
-## How does it all work?
+<br>
 
-To my knowledge most routers contain UPnP, which this library uses to make SOAP requests, an XML based protocol, to your router to call on a web service. More specifically, the WANIPConnection or WANPPPConnection service type. From here it is mostly about formatting your SOAP requests properly, which can be guided with the help of your own routers' Internet Gateway Device or by using the documentation from the Service Template. Within the Service Template you can find all the different requests you can make and what they will do.
+### **getPortMappingList**
+*Service action for listing all currently mapped ports on the router*
+```JavaScript
+const list = await igd.getPortMappingList();
+```
+
+<br>
+
+### **getPortMapping**
+*Service action for remtrieving a single port map by index*
+```JavaScript
+const portmap = await igd.getPortMapping(2);
+```
+
+#
 
 ## References
+**Documents**
 
-|                                     Informative                                     |                    Examples                       |
-| ----------------------------------------------------------------------------------- | ------------------------------------------------- |
-| [Service Template](http://upnp.org/specs/gw/UPnP-gw-WANIPConnection-v2-Service.pdf) | [TinyUPnP](https://github.com/ofekp/TinyUPnP)     |
-| [UPnP Background](http://www.upnp-hacks.org/upnp.html)                              | [miniupnp](https://github.com/miniupnp/miniupnp)  |
-| [Internet Gateway Device](http://www.upnp-hacks.org/igd.html)                       | [weupnp](https://github.com/bitletorg/weupnp)     |
-| [Node.js and SSDP](https://coolaj86.com/articles/adventures-in-upnp-with-node-js/)  | [upnpclient](https://github.com/flyte/upnpclient) |
+[UPnP Architecture](http://www.upnp.org/specs/arch/UPnP-arch-DeviceArchitecture-v1.0-20080424.pdf) |
+[Service Template](http://upnp.org/specs/gw/UPnP-gw-WANIPConnection-v2-Service.pdf) |
+[UPnP Background](http://www.upnp-hacks.org/upnp.html) |
+[Internet Gateway Device](http://www.upnp-hacks.org/igd.html) 
 
-## Contributions
+**Code Samples**
 
-<a href="https://github.com/swimauger/upnpjs/graphs/contributors">
-  <img src="https://contributors-img.firebaseapp.com/image?repo=swimauger/upnpjs" />
-</a>
+[miniupnp](https://github.com/miniupnp/miniupnp) |
+[TinyUPnP](https://github.com/ofekp/TinyUPnP) |
+[weupnp](https://github.com/bitletorg/weupnp) |
+[upnpclient](https://github.com/flyte/upnpclient) |
+[Node.js and SSDP](https://coolaj86.com/articles/adventures-in-upnp-with-node-js/)
