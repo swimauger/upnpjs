@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/swimauger/upnpjs.git"
   },
+  "scripts": {
+    "test": "jest"
+  },
   "keywords": [
     "UPnP",
     "Universal Plug and Play"
@@ -23,5 +26,10 @@
   "dependencies": {
     "chalk": "^3.0.0",
     "jsdom": "^16.4.0"
+  },
+  "devDependencies": {
+    "ip": "^1.1.5",
+    "jest": "^26.4.2",
+    "public-ip": "^4.0.2"
   }
 }
