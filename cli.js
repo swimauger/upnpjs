@@ -1,86 +1,142 @@
 #!/usr/bin/env node
 
 const chalk = require('chalk');
-const argv = require('yargs').argv;
-const upnp = require('./lib/upnp.js');
+const upnp = require('./index');
+const { name, author, version } = require('./package.json');
 
 // LOGS
 const success = chalk.bold.green;
 const error = chalk.bold.red;
 
-upnp.getDevice().then(function(device) {
-    if (typeof argv.a === "string") {
-        console.log("Mapping Port");
-        device.addPortMapping({
-            address: argv.a,
-            internalPort: argv._[0],
-            externalPort: argv._[1]
-        }).then(function() {
-            success("Success, ",argv._[0]," is now mapped to ",argv._[1]);
-            process.exit();
-        }).catch(function(err) {
-            error(err);
-            process.exit();
+function title() {
+    let text = `${name}    :    UPnP Library by ${author}, v${version}`;
+    const end = process.stdout.columns;
+    const start = end/2 + text.length/2;
+    console.log(chalk.bgBlue(text.padStart(start).padEnd(end)));
+}
+
+function help() {
+    title();
+    console.log(`
+    Usage:  
+            upnp -a ip internal_port external_port protocol description lease
+            upnp -add ip internal_port external_port protocol description lease
+            Add a Port Mapping
+
+            upnp -d external_port protocol
+            upnp --delete external_port protocol
+            Delete a Port Mapping
+
+            upnp -l
+            upnp --list
+            Lists open ports
+
+            upnp -g [option]
+            upnp --get [option]
+            Get External Ip
+
+            upnp or upnp -h
+            upnp --help
+            Show this help menu
+
+    Options:
+            ip: Local IPv4 Address
+            internal_port: Local Port [0 - 65535]
+            external_port: External Port[0 - 65535]
+            protocol: TCP or UDP
+            description: Description of port mapping
+            lease: Duration to port mapping will stay
+    `);
+}
+
+async function add() {
+    try {
+        const igd = await upnp.discover();
+        const args = process.argv.splice(3);
+        const isMapped = await igd.addPortMapping({
+            ip: args[0],
+            internalPort: args[1],
+            externalPort: args[2],
+            protocol: args[3],
+            description: args[4],
+            lease: args[5]
         });
-    } else if (typeof argv.d === "number") {
-        device.deletePortMapping({
-            externalPort: argv.d,
-            protocol: argv._[0]
-        }).then(function() {
-            success("Success, ",argv.d," is no longer mapped");
-            process.exit();
-        }).catch(function(err) {
-            error(err);
-            process.exit();
-        });
-    } else if (argv.l) {
-        device.getListOfPortMappings()
-              .then(function(list) {
-                  console.table(list);
-                  process.exit();
-              });
-    } else if (typeof argv.g === "string" || typeof argv.get === "string") {
-        let dest = argv.g || argv.get;
-        if (dest.toLowerCase() === "local") {
-            console.log(device.getLocalIPAddress());
-            process.exit();
-        } else if (dest.toLowerCase() === "external") {
-            device.getExternalIPAddress()
-                .then(function(ip) {
-                    console.log(ip);
-                    process.exit();
-                })
-                .catch(function(err) {
-                    error(err);
-                    process.exit();
-                })
+        title();
+        if (isMapped) {
+            success('Port mapped succesfully!');
         } else {
-            error("Error: ",dest," is not a valid argument");
-            process.exit();
+            error('Unable to create port map!');
         }
-    } else {
-        console.log(chalk.bgCyan("  upnpjs   :   UPnP Library by Mark Auger, v1.0  "));
-        console.log(`
-        Usage:  upnp -a ip internal_port external_port
-                Add a Port Mapping
-
-                upnp -d external_port protocol
-                Delete a Port Mapping
-
-                upnp -l
-                Lists open ports
-
-                upnp -g [option]
-                upnp --get [option]
-                Get a Local or External Ip
-
-                Example:    upnp -g local
-                            upnp --get external
-
-        Options:
-            local: Local IP Address
-            external: External IP Address
-        `);
-        process.exit();
+    } catch (error) {
+        throw error;
     }
-});
+}
+
+async function remove() {
+    try {
+        const igd = await upnp.discover();
+        const args = process.argv.splice(3);
+        const isDeleted = await igd.deletePortMapping({
+            externalPort: args[0],
+            protocol: args[1]
+        });
+        title();
+        if (isDeleted) {
+            success('Succesfully removed port mapping!');
+        } else {
+            error('Unable to remove port mapping!');
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function list() {
+    try {
+        const igd = await upnp.discover();
+        const list = await igd.getPortMappingList();
+        title();
+        console.table(list);
+    } catch (error) {
+        throw error;
+    }
+}
+
+async function getIp() {
+    try {
+        const igd = await upnp.discover();
+        const ip = await igd.getExternalIPAddress();
+        title();
+        console.log('External IP:', chalk.yellow(ip));
+    } catch (error) {
+        throw error;
+    }
+}
+
+switch (process.argv[2]) {
+    case '-a':
+    case '--add':
+        add();
+        break;
+    
+    case '-d':
+    case '--delete':
+        remove();
+        break;
+
+    case '-l':
+    case '--list':
+        list();
+        break;
+
+    case '-g':
+    case '--get':
+        getIp();
+        break;
+
+    case '-h':
+    case '--help':
+    default:
+        help();
+        break;
+}
