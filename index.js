@@ -1,3 +1,1 @@
-exports = module.exports = require('./lib/upnp.js');
-
-exports.version = require('./package.json').version;
+module.exports = require('./lib/js/upnp.js');

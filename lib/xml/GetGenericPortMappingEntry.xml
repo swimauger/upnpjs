@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+    <s:Body>
+        <u:GetGenericPortMappingEntry>
+            <NewPortMappingIndex></NewPortMappingIndex>
+            <NewRemoteHost></NewRemoteHost>
+            <NewExternalPort></NewExternalPort>
+            <NewProtocol></NewProtocol>
+            <NewInternalPort></NewInternalPort>
+            <NewInternalClient></NewInternalClient>
+            <NewEnabled></NewEnabled>
+            <NewPortMappingDescription></NewPortMappingDescription>
+            <NewLeaseDuration></NewLeaseDuration>
+        </u:GetGenericPortMappingEntry>
+    </s:Body>
+</s:Envelope>
