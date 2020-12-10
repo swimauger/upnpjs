@@ -1,6 +1,6 @@
 {
   "name": "upnpjs",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A Node.js package for using UPnP",
   "main": "./index.js",
   "bin": {
