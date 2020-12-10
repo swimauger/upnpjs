@@ -25,6 +25,14 @@ describe('upnpjs library tests', () => {
         });
     });
 
+    // Enable when portscan library is updated
+    test.skip('upnp check port is open', async () => {
+        const igd = await upnp.discover();
+        const externalIp = await igd.getExternalIPAddress();
+        const portscan = require('@swimauger/portscan');
+        await expect(portscan(`${externalIp}:25565`)).resolves.toBe(true);
+    });
+
     test('upnp delete port mapping', async () => {
         const igd = await upnp.discover();
         await expect(igd.deletePortMapping({

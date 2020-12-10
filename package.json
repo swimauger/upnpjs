@@ -28,6 +28,7 @@
     "jsdom": "^16.4.0"
   },
   "devDependencies": {
+    "@swimauger/portscan": "^1.0.1",
     "ip": "^1.1.5",
     "jest": "^26.4.2",
     "public-ip": "^4.0.2"
