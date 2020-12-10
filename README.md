@@ -15,9 +15,8 @@
 
 **Install upnp CLI**
 ```bash
-    npm install upnpjs -g
-    #################################
     # Use `upnp -h` to show help menu
+    npm install upnpjs -g
 ```
 
 #
@@ -46,8 +45,9 @@ await igd.addPortMapping({
     ip: 192.168.0.4,
     internalPort: 54321,
     externalPort: 54321,
-    protocol: 'TCP',
-    description: 'Example port map from 54321 -> 54321'
+    protocol: 'TCP', // Defaults to TCP
+    description: 'Example port map from 54321 -> 54321', // Defaults to empty string
+    enabled: false // Defaults to true
 });
 ```
 
